@@ -2,11 +2,21 @@
 title: "How film length, genre and budget affect a film's reception among audiences"
 author: "Arjun Dhatt"
 date: "20/12/2020"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ## Keywords 
+
+- Film
+- Genre
+- Budget
+- Linear Regression 
+- Title 
+
 ## Abstract
+
 In this report, I will be looking at the various factors that influence a film's reception among audiences. Using the 'ggplot2movies' packages, I will be looking at the dataset 'movies' and filtering the dataset to include relevant varaibles such as — title, rating, genre, and budget. Then I will run an analysis to identify the variables that affect a film's reception among audiences. After completing the analysis, I concluded that ... 
 
 ## Introduction 
@@ -23,7 +33,6 @@ With the results from the analysis discussed above, I concluded that []
 
 In the rest of this report, I will begin by looking at the data, showing my analysis,. and then a conclusion. 
 
-## Keywords
 
 ## Data
 
@@ -34,9 +43,15 @@ head(movies)
 
 ## Analysis
 
+Show analysis of data
+
 ## Results 
 
+Show what we concluded from our analysis 
+
 ## Appendix 
+
+Show all lines of code and extranneous graphs
 
 
 
