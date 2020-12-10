@@ -11,7 +11,7 @@ output:
 
 - Film
 - Genre
-- Budget
+- Budget 
 - Linear Regression 
 - Title 
 
