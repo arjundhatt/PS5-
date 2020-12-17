@@ -30,7 +30,7 @@ I began the analysis by looking at the variable budget. I conducted a linear reg
 
 With the results from the analysis discussed above, I concluded that a film's length and year of release do affect the film's reception, while the budget does not. 
 
-In the rest of this report, I will begin by looking at the data, showing my analysis, and then a conclusion. 
+In the rest of this report, I will begin by looking at the data, showing my model, showing results, followed by a discussion, and then a conclusion. 
 
 
 ## Data
@@ -121,7 +121,7 @@ plot(rating~budget,data=moviesfiltered )
 
 #Judging by the high p-value, we can conclude that a films budget does not affect its reception among the audience. 
 ```
-Judging by the scatterplot, we can see that there is not a clear relation between the variables. By further analyzing the linear regression summary, we can see that we have a large p-value and can conclude that there is no relation between a film's reception and budget. 
+Judging by the scatterplot, we can see that there is not a clear relation between the variables. The points seem to be scattered randomly without a clear direction. By further analyzing the linear regression summary, we can see that we have a large p-value and can conclude that there is no relation between a film's reception and budget. 
 
 ### How length affects a films reception 
 
@@ -150,6 +150,7 @@ plot(rating~year,data=moviesfiltered )
 #Yes, films that are longer get better rating
 ```
 In the scatterplot, we can see that there is a clear relation. Obviously the yaer 2000 has a larger interval of rating and that may be partly due tot the fact that there was more movies released. Judging by the fact that the p-value is <0.05 in this case, we can conclude that there is a relationship among the year a film was released and its reception. 
+
 ## Discussion 
 
 Show what we concluded from our analysis 
