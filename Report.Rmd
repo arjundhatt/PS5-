@@ -3,8 +3,8 @@ title: "How film length, year and budget affect a film's reception among audienc
 author: "Arjun Dhatt"
 date: "20/12/2020"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ## Keywords 
@@ -114,8 +114,6 @@ We will first determine how a film's budget affects the reception of a film. By 
 
 #Many rows of our data do not contain a budget, so I will remove those rows 
 budgetonly <- na.omit(moviesfiltered)
-budgetonly
-
 linregbudget <- lm(rating~budget, data=budgetonly)
 summary(linregbudget)
 

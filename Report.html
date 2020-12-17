@@ -465,22 +465,7 @@ hist(movies$year)</code></pre>
 <p>We will first determine how a film’s budget affects the reception of a film. By running a linear regression on the variables, we can see what a scatterplot between the variables looks like:</p>
 <pre class="r"><code>#Many rows of our data do not contain a budget, so I will remove those rows 
 budgetonly &lt;- na.omit(moviesfiltered)
-budgetonly</code></pre>
-<pre><code>## # A tibble: 4,272 x 6
-##    title                       year length   budget rating votes
-##    &lt;chr&gt;                      &lt;int&gt;  &lt;int&gt;    &lt;int&gt;  &lt;dbl&gt; &lt;int&gt;
-##  1 'G' Men                     1935     85   450000    7.2   281
-##  2 'Manos' the Hands of Fate   1966     74    19000    1.6  7996
-##  3 'Til There Was You          1997    113 23000000    4.8   799
-##  4 .com for Murder             2002     96  5000000    3.7   271
-##  5 10 Things I Hate About You  1999     97 16000000    6.7 19095
-##  6 100 Mile Rule               2002     98  1100000    5.6   181
-##  7 101                         1989    117   200000    7.8   299
-##  8 102 Dalmatians              2000    100 85000000    4.7  1987
-##  9 11:14                       2003     95  6000000    7.1   605
-## 10 12 Angry Men                1957     96   340000    8.7 29278
-## # … with 4,262 more rows</code></pre>
-<pre class="r"><code>linregbudget &lt;- lm(rating~budget, data=budgetonly)
+linregbudget &lt;- lm(rating~budget, data=budgetonly)
 summary(linregbudget)</code></pre>
 <pre><code>## 
 ## Call:
