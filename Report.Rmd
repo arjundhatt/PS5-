@@ -51,7 +51,9 @@ movies <- mutate(movies, )
 moviesx <-movies[c('title', 'year', 'length', 'budget','rating','votes') ]
 
 
-moviesfiltered <- filter(moviesx, votes > (quantile(movies$votes, .50)))
+moviesfiltered <- filter(moviesx, votes > (quantile(movies$votes, .5)))
+moviesfilteredx <- filter(moviesfiltered, year > 1950)
+
 ```
 
 In this report, I will be using the ‘ggplot2movies’ dataset. The data is collected from the website https://www.imdb.com — a website dedicated to collecting information about various films, television shows, and celebrities. Users are able to complete reviews on the IMDB website allowing them to provide a score for a film on a scale from 1-10. 
@@ -66,6 +68,10 @@ Although the dataset contains information on 25 variables, I will only be analyz
 -	‘length’ — provides the length of the film
 -	‘rating’ — provides the average rating of the film by IMDB users 
 -	‘mpaa’ — provides the MPAA (Motion Pictures Association of America) rating of the film 
+
+A large part of this report will use rating as a dependant variable and rating is largely dependant on the number of votes. The original dataset contains 58,788 films, but many of those films contain very little votes. According to the law of large number, as the sample size grows larger, the rating will approach its true mean; the rating can not approach the true mean if it is based on only a few number of votes. Therefore, I removed all entries with less than 30 votes. The 50 vote threshold was based on the 50th percentile of 'votes'. Removing al entries below the 50th percentile ensures that the rating is not unreliable due to a few number of votes. 
+
+Many entries from the data are from before the yaer 1950; the dataset actualyl contains 10,418 entries from films before 1950. Films from before 1950 are different from the films that we are used to seeing in today's age in many different ways. Reviewers may have focused on stylistic traits, rather than both stylistic and narrative traits like we see in today's movies; movies were also shorter. Due to the unfair ground we may be measuring the films from different eras, I decided to focus exclusively on films released after 1950's as they conform to the style we are used to seeing in modern films. 
 
 To make the variable ‘year’ easier to analyze, I created a variable titled ‘decade’ so that the films are grouped by decade. This makes it much easier to analyze because there are fewer values to analyze. 
 
