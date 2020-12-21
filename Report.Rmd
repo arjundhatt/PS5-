@@ -1,13 +1,13 @@
 ---
 title: "How film length and budget are positively related to a film's reception, while year of release is negatively related to a film's reception"
 author: "Arjun Dhatt"
-date: "20/12/2020"
+date: "December 22, 2020"
 output:
   pdf_document: default
   html_document: default
 ---
 
-## Keywords 
+## Keywords:
 - Film
 - Year
 - Budget 
@@ -33,10 +33,13 @@ In this report, I will begin by explaining the data that I will be using in the 
 
 ## Data
 
-```{r}
+```{r include = FALSE}
+# Setting up libraries
 library(ggplot2movies)
 library(ggplot2)
 library(dplyr)
+
+# Adding the variable decade based on the variables years 
 movies <- mutate(movies, decade = ifelse(year %in% 1950:1959, "1950s",
                                         ifelse(year %in% 1960:1969, "1960s",
                                         ifelse(year %in% 1970:1979, "1970s",
@@ -44,19 +47,19 @@ movies <- mutate(movies, decade = ifelse(year %in% 1950:1959, "1950s",
                                         ifelse(year %in% 1990:1999, "1990s",
                                         ifelse(year %in% 2000:2009, "2000s", "<1949")))))))
 
-movies <- mutate(movies, )
 
+#Filtering the dataset so that it only contains relevant variables
 moviesx <-movies[c('title', 'year', 'length', 'budget','rating','votes') ]
-
-
+#Filtering the dataset so that it only contains films that contain a certain amount of votes. Specifically, above the 50th percentile which is 30
 moviesfiltered <- filter(moviesx, votes > (quantile(movies$votes, .5)))
+#Filtering the dataset so that it only contains films released after the year 1950
 moviesfilteredx <- filter(moviesfiltered, year > 1950)
 
 ```
 
 In this report, I will be using the ‘ggplot2movies’ dataset. The data is collected from the website https://www.imdb.com — a website dedicated to collecting information about various films, television shows, and celebrities. Users are able to complete reviews on the IMDB website allowing them to provide a score for a film on a scale from 1-10. 
 
-The ‘ggplot2movies’ package selects films from the IMDB site if they had a known length and had been rated by at least one IMDB user. Each film corresponds to one entry in the dataset and contains information on up to 25 variables; not all films contain information about all 25 categories. For example, many of the films from before 1960 do not contain information about the film budget which will be important when determining whether budget affects a films reception. The ‘ggplot2movies’ package contains information on a total of 58,788 films. All of the films used in the dataset were collected from the year 1893 to 2005. 
+The ‘ggplot2movies’ package selects films from the IMDB site if they had a known length and had been rated by at least one IMDB user. Each film corresponds to one entry in the dataset and contains information on up to 25 variables, but not all films contain information on all 25 categories. For example, many of the films from before 1950 do not contain information about the film budget which is important when determining whether budget affects a films reception. The ‘ggplot2movies’ package contains information on a total of 58,788 films. All of the films used in the dataset were collected from the year 1893 to 2005. 
 
 Although the dataset contains information on 25 variables, I will only be analyzing a select few variables in the dataset. The variables and descriptions of the variables I will be analyzing can be seen below:
 
@@ -66,23 +69,36 @@ Although the dataset contains information on 25 variables, I will only be analyz
 -	‘length’ — provides the length of the film
 -	‘rating’ — provides the average rating of the film by IMDB users 
 
-A large part of this report will use rating as a dependant variable and rating is largely dependant on the number of votes. The original dataset contains 58,788 films, but many of those films contain very little votes. According to the law of large number, as the sample size grows larger, the rating will approach its true mean; the rating can not approach the true mean if it is based on only a few number of votes. Therefore, I removed all entries with less than 30 votes. The 50 vote threshold was based on the 50th percentile of 'votes'. Removing al entries below the 50th percentile ensures that the rating is not unreliable due to a few number of votes. 
+A large part of this report will use rating as a dependant variable and rating is largely dependant on the number of votes. The original dataset contains 58,788 films, but many of those films contain very little votes. According to the law of large number, as the sample size grows larger, the rating will approach its true mean; the rating can not approach the true mean if it is based on only a few number of votes. Therefore, I removed all entries with less than 30 votes. The 30 vote threshold was based on the 50th percentile of 'votes'. Removing all entries below the 50th percentile ensures that the rating is not unreliable due to a few number of votes. 
 
 When observing a histogram based on year of release, we can see that the dataset is severely left-skewed:
 
-```{r}
-library(ggplot2movies)
-library(dplyr)
+```{r echo = FALSE}
 hist(movies$year)
 ```
 
-Many entries from the data are from before the year 1950; the dataset actually contains 10,418 entries from films before 1950. Films from before 1950 are different from the films that we are used to seeing in today's age in many different ways. Reviewers may have focused on stylistic traits, rather than both stylistic and narrative traits like we see in today's movies; movies were also shorter. Due to the unfair ground we may be measuring the films from different eras, I decided to focus exclusively on films released after 1950's as they conform to the style we are used to seeing in modern films. 
+Despite the fact that it is left skewed, there is still a large number of films that are released before 1950; the dataset actually contains 10,418 entries from films before 1950. Films from before 1950 are different from the films that we are used to seeing in today's age in many different ways. Reviewers may have focused on stylistic traits, rather than both stylistic and narrative traits like  today's movies; movies were also much shorter. Due to the unfair critical comparisons between the films from different eras, I decided to focus exclusively on films released after 1950's as they conform to the style we are used to seeing in modern films. Therefore, I removed all films from the year 1950 and below. 
 
-To make the variable ‘year’ easier to analyze, I created a variable titled ‘decade’ so that the films are grouped by decade. This makes it much easier to analyze because there are fewer values to analyze. 
+The dataset also contains an outlier for the variable 'length'. Below, I will plot a scatterplot of length and reception.  
 
-Below, you can see what the first few values of our dataset looklike:
+```{r echo = FALSE}
+plot(rating~length,data=moviesfilteredx )
+```
 
-```{r}
+
+After observing the scatterplot showing the relationship between reception and length, it is clear that we have an outlier (a film titled 'A Cure for Insomnia' that is over 5000 minutes long — fitting title). Below, I will display what the data looks like without the outlier. 
+
+```{r echo= FALSE}
+movieswithoutcureforinsomnia <- filter(moviesfilteredx, length < 3000)
+plot(rating~length,data=movieswithoutcureforinsomnia )
+```
+
+
+Removing the outlier pertaining to the film 'A Cure for Insomnia' ensures that we can run a good analysis without skewed results due to an outlier. 
+
+To understand what the dataset looks like, I will display the first few rows of our dataset:
+
+```{r echo = FALSE}
 head(moviesfilteredx)
 ```
 
@@ -90,29 +106,37 @@ The population in this case is every person that watched the film and can rate t
 
 The key features of the data is the breadth of films that the data offers. We get information about films from various eras of cinema ensuring that our data is a good representation of films in general. The advantage of the dataset arises from the fact that our data is well representative of film in general; this means that when we perform an analysis on the data, we know that our results are meaningful. Despite the fact that it is well representative of film, it's largely representative of Western cinema and missing out other large industries around the world; this can be viewed as a disadvantage because our data does not represent the entire film industry. If our data included films from the Eastern world, the results from our analysis may be different.
 
-GO MORE IN DEPTH INTO THE BIASES OF THE DATA
-
+There are also potential biases that arise from the dataset. Due to the fact that our data is collected from the website IMDB, the results of our data are primarily collected from the 21st century, meaning many of the reviews are retrospective. The retrospective review of older films may not be reviewed the same way as a modern film from the 21st century as the reviewer may look evaluate the films from a different criterion.  
 
 ## Model
 
-In this paper, I will be using linear regression to see how different variables can affect a films reception. 
+In this paper, I will be using linear regression to determine how budget, length and year of release can affect a film's reception. 
 
-A linear regression model can be explained by the equation $$y=a*x_0 +b$$. In this case, $y$ is the film's dependant variable, while $x_0$ is the independant variable that I want to determine if it affects the dependant variable. Using the lm() function in R, I will create a linear regression model, and then I will look at the summary of the model to see if the p-value is significant. If the p-value is less than 0.05, then I know that the independant variable affects the films reception. 
+A linear regression model can be explained by the equation $$y=a*x_0 +b$$ In this case, $y$ is the film's dependant variable, while $x_0$ is the independant variable; $a$ is interpreted as the slope coefficient, while $b$ is the y-intercept .   
 
-The dependant variable in this linear regression model will be 'rating' because I want to see how the rating of a film is dependant on other independant variable. Since I am analyzing a 'film's reception' in this paper, the variable that best encompasses reception is the average rating that IMDB users provide for the film. 
+I want to determine whether the independant variable affects the dependant variable. The purpose of linear regression is to approximate the relationship between the dependant and independant variable with a straight line. The straight line is fitted to reduce error between all of the points on the scatterplot between the dependant variable ('rating') and the independant variable (differs) . After approximating the relationship with a straight line, we can use the slope co-efficient to determine whether there is a positive or negative relationship. A positive slope coefficent implies a positive relationship, while a negative slope coefficent implies a negative relationship. But in order to determine whether the relationship is actually statistically significant, we need to look at the p-value. 
+
+The purpose of a p-value is to determine whether the relationship is actually significant or if it just occured by chance. The p-value assumes that the null hypothesis — there is no relation between the independant and dependant variable — is true, and finds the probability of obtaining results that are more extreme than the null hypothesis in the dataset. If the p-value is large, then that indicates that the data supports the null hypothesis; if the p-value is small, then that indicates that the data does not support the null hypothesis. I will be using a significance level of 0.05 meaning that if the p-value is smaller than 0.05, I can conclude that there is a significant relationship. 
+
+Using the lm() function in R, I will create a linear regression model, and then I will look at the summary of the model to determine if my results are meaningful. The summary of the linear regression model provides both the slope coefficient which allows me to determine whether we have a positive or negative relationship, and it also provides the p-value for the slope coefficient so I can identify whether there is a significant relationship. If the p-value is less than 0.05, then I know that the independant variable affects has a significant relationship with the film's reception. 
+
+The dependant variable in this linear regression model will be 'rating' because I want to determine how the rating of a film is dependant on other independant variable such as budget, length, and year of release. Since I am analyzing a 'film's reception' in this paper, the variable that best encompasses reception is the average rating that IMDB users provide for the film, which is why I am using 'rating' as the dependant variable. 
 
 The independant variables I will be analyzing are: 
-- 'length'- this is simply provided by the variable 'length'
-- 'year'- this is simply provided by the variable 'year'. I did mutate another variable titled 'decade' which makes visualizing the data easier, but when performing linear regression, 'year' is more thorough so I decided to use 'year' as an independant variable. 
-- 'budget'- this is simply provided by the variable 'budget'
 
-All 3 variables that I am analyzing are continuous variables. 
+- 'length'- this provides the length of the film in minutes and is simply provided by the variable 'length'
+
+- 'year'- this is simply provided by the variable 'year' and indicates the year of release for the film 
+
+- 'budget'- this is simply provided by the variable 'budget' and indicates the budget of the film in US dollars 
+
+All 3 variables that I am analyzing are continuous, numberical variables. 
 
 Because I am identifying how a film's reception is affected by various independant variables, it makes sense to run linear regression as I want to see the cause and effect relationship between an independant and dependant variable. The relationships that I am analyzing are strictly between 2 variables — rating (dependant) and length, year or budget (independant). 
 
 ## Results 
 
-In this section of this paper, I will be looking at the relation between a film's rating and 3 different independant variables— length, year and budget. I will be using a signicance level of 0.05. 
+In this section of this paper, I will be looking at the relation between a film's rating and 3 different independant variables— length, year and budget. I will be using a signicance level of 0.05 to determine whether a p-value is significant. 
 
 ### How budget affects a film's reception 
 
@@ -120,7 +144,7 @@ I will first look at how a film's budget affects the reception of a film
 
 In order to determine the relationship between the dependant variable (reception) and the independant variable (budget), I will run a linear regression. Because many of the entries in our dataset don't contain information about the film's budget, I will remove those values when performing the linear regression; this means that the linear regression between budget and reception will only inspect entries with a budget greater than 0. 
 
-```{r}
+```{r echo= FALSE}
 #Scatterplot of rating and budget 
 
 #Remove entries that have a value of NA or 0 for budget 
@@ -133,15 +157,15 @@ Looking at the data as a scatterplot, there seems to be slight positive relation
 
 To further examine the relationship, I will run a linear regression between the two variablesto determine whether the relationship is significant. The results of the linear regression can be seen below: 
 
-```{r}
+```{r echo = FALSE}
 #Many rows of our data do not contain a budget, so I will remove those rows 
 
-
 linregbudget <- lm(rating~budget, data=budgetfiltered)
-summary(linregbudget)
 
 plot(rating~budget,data=budgetfiltered ) 
 abline(linregbudget, col="red")
+
+summary(linregbudget)
 
 #Judging by the high p-value, we can conclude that a films budget does not affect its reception among the audience. 
 ```
@@ -154,28 +178,22 @@ Next, I will be looking at how a film's length affects the reception of a film.
 In order to determine the relationship between the dependant variable (reception) and the independant variable (length), I will run a linear regression, but first I will visualize the data with a scatterplot. 
 
 ```{r}
-plot(rating~length,data=moviesfilteredx )
-```
-After observing the scatterplot showing the relationship between reception and length, it is clear that we have an outlier (a film titled 'A Cure for Insomnia' that is over 5000 minutes long — fitting title). I will remove the outlier and perform  linear regression on the data without the outlier. Below, I will display what the data looks like without the outlier. 
-
-```{r}
-movieswithoutcureforinsomnia <- filter(moviesfilteredx, length < 3000)
 plot(rating~length,data=movieswithoutcureforinsomnia )
-
 ```
 
 Although there is a large cluster on the left side of the graph, there does seem to be a slight positive relationship that indicates  a longer length results in a better film rating. To confirm this, we can look at the summary statistics for the linear regression. 
 
-```{r}
+```{r echo = FALSE}
 #Linear regression between rating and length
 linreglength <- lm(rating~length, data=movieswithoutcureforinsomnia)
 #Summary statistics for linear regression
-summary(linreglength)
 
 plot(rating~length,data=movieswithoutcureforinsomnia )
 abline(linreglength, col="red")
 
+summary(linreglength)
 ```
+
 After observing the summary statistics related to the relationship between rating and length, it is clear that we have a really strong relationship. The p-value of 2e-16 is significantly smaller than our significance level of 0.05 indicating that there is a strong relationship between the variables rating and length. 
 
 ### How the year of release affects a films reception 
@@ -184,7 +202,7 @@ Last, we will look at how the year a film's released affects it's reception.
 
 To begin, we will visualize the data with a scatterplot to identify whether we can see a relationship. 
 
-```{r}
+```{r echo = FALSE}
 plot(rating~year,data=moviesfilteredx )
 ```
 
@@ -192,9 +210,14 @@ Judging by the scatterplot, there doesn't seem to be an obvious relationship bet
 
 We can accurately identify whether there is a relationship by examining the linear regression between the two variables. 
 
-```{r}
+```{r echo = FALSE}
 linregyear <- lm(rating~year, data=moviesfilteredx)
+
+plot(rating~year,data=moviesfilteredx )
+abline(linregyear, col="red")
+
 summary(linregyear)
+
 ```
 
 Surprisingly, there is a strong negative relationship. By observing the graph, I thought that there wasn't a significant relationship as I didn't see any blatant positive or negative relationship. But the slightly negative slope with a p-value much smaller than 0.05 indicates that there is a negative relationship between year and reception.  
@@ -210,6 +233,8 @@ The positive relationship between a film's reception and budget indicates that a
 
 A larger budget means that the film production has more money to spend; this can results in better actors, special effects, marketing, etc. which can affect how an audience reacts to the film. Despite the fact that a film production may have more money to spend, it doesn't always result in an overall better film. Critics may interpret a good film differently than what an audience interprets as a good film. 
 
+There are also some issues that arise from simply quantifying budget in US dollars. Inflation plays a large part in why films in the 1990s to 2000s have larger budgets. If earlier films like those from the 1950s were adjust for US inflation, then our results may have different and we may have discovered that there actually is no relation.  
+
 The positive relationshop between a film's reception and length indicates that as a film's length increases, then the reception of the film increases as well. Films released before 1950 were often characterized by their short lengths (especially during film eras before the 1920s). Due to their short lengths and the fact that cinema wasn't used in it's typical way at that time, I decided to focus excluvely on films released after the 1950s. 
 
 Film studios often have a final say before releasing a film. If a film is long, that may advise cutting the film so that it appeals to the masses. For a film to have a long runtime, it would need to be justified; the film would have to be good enough to be worth the audience's time. This may be a reason why a longer run time leads to a better reception. Good filmmakers often want their film to be a result of their uncompromised — without cuts— vision leading to more films that are longer with a better reception.  
@@ -220,10 +245,6 @@ The data was collected from IMDB meaning that a lot of earlier films were rated 
 
 The results from the analysis can assist people in many ways. When deciding on a good film to watch, the positive relation reception has with budget and length can help identify whether a film may be a good or a bad film; the negative relation between reception and year of release can also aid in helping determine the film's reception. Additionally, when creating a film, some of these relationships can aid in forecasting it's reception. A longer film, with a large budget may result in a film that is well received. 
 
-There are some weaknesses from our analysis, partly due to the dataset used. To measure an audience's reception, we are using a website that wasn't popular until the 21st century. This means that a lot of our reviews for older films are retrospective, which means that may not be the most accurate. Also, because the 
-
-
-
 Advantage
 
 Disadvantage
@@ -231,8 +252,12 @@ IMDB is a newer site so we are not seeing reviews from people now.
 
 The results of our analysis do contain weaknesses, many of them stem from the data being used.
 
+There are many additional steps that can be taken for a better analysis. For one, we could have a dataset that contains information on more films from around the world. Have budget be adjustted for inflaiton. 
+
 ## Appendix/References
 
 Show all lines of code and extranneous graphs
+
+MAKE SURE TO CITE THE R PACKAGE AND R
 
 
