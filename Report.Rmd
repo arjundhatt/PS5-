@@ -134,6 +134,8 @@ All 3 variables that I am analyzing are continuous, numerical variables.
 
 Because I am identifying how a film's reception is affected by various independent variables, it makes sense to run linear regression as I want to see the cause and effect relationship between an independent and dependant variable. The relationships that I am analyzing are strictly between 2 variables — rating (dependant) and length, year or budget (independent). 
 
+In addition to using the library 'ggplot2movies' to analyze the 'movies' dataset, I am also using the libraries 'ggplot2' and 'dplyr'. The library 'ggplot2' helps create some of the graphs used to visualize the data and the package 'dplyr' provides functions to clean the 'movies' dataset making it ready to analyze. 
+
 ## Results 
 
 In this section of this paper, I will be looking at the relation between a film's rating and 3 different independent variables— length, year and budget. I will be using a significance level of 0.05 to determine whether a p-value is significant. 
@@ -402,10 +404,10 @@ summary(linregyear)
 
 ### References 
 
-- Hadley Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York, 2016. [ggplot2]
-- Hadley Wickham, Romain François, Lionel Henry and Kirill Müller (2020). dplyr: A Grammar of Data Manipulation. R package version 1.0.2. https://CRAN.R-project.org/package=dplyr [dplyr]
-- Hadley Wickham (2015). ggplot2movies: Movies Data. R package version 0.0.1. [ggplot2movies]       https://CRAN.R-project.org/package=ggplot2movies
-- R Core Team (2013). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria. URL http://www.R-project.org/. [R]
+- Hadley Wickham. ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York, 2016. 
+- Hadley Wickham, Romain François, Lionel Henry and Kirill Müller (2020). dplyr: A Grammar of Data Manipulation. R package version 1.0.2. https://CRAN.R-project.org/package=dplyr 
+- Hadley Wickham (2015). ggplot2movies: Movies Data. R package version 0.0.1.       https://CRAN.R-project.org/package=ggplot2movies
+- R Core Team (2013). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria. URL http://www.R-project.org/. 
 
 
 
