@@ -39,14 +39,6 @@ library(ggplot2movies)
 library(ggplot2)
 library(dplyr)
 
-# Adding the variable decade based on the variables years 
-movies <- mutate(movies, decade = ifelse(year %in% 1950:1959, "1950s",
-                                        ifelse(year %in% 1960:1969, "1960s",
-                                        ifelse(year %in% 1970:1979, "1970s",
-                                        ifelse(year %in% 1980:1989, "1980s",
-                                        ifelse(year %in% 1990:1999, "1990s",
-                                        ifelse(year %in% 2000:2009, "2000s", "<1949")))))))
-
 
 #Filtering the dataset so that it only contains relevant variables
 moviesx <-movies[c('title', 'year', 'length', 'budget','rating','votes') ]
@@ -247,8 +239,6 @@ summary(linregyear)
 
 Surprisingly, there is a strong negative relationship. By observing the graph, I thought that there wasn't a significant relationship as I didn't see any blatant positive or negative relationship. But the slightly negative slope with a p-value much smaller than 0.05 indicates that there is a negative relationship between year and reception.  
 
-------------------------------------------------------------------------------------------------------------
-
 ## Discussion 
 
 From this results of the analysis, I can conclude that there is a positive relationship between reception and budget, a positive relationshop between reception and length, and a negative relationship between reception and year of release. 
@@ -286,24 +276,16 @@ Below you will also find the R code used in this analysis:
 
 #### Preamble; Setting up libraries and filtering the dataset 
 ```{r include = TRUE, echo=TRUE}
-knitr::opts_chunk$set(echo = FALSE)
 # Setting up libraries
 library(ggplot2movies)
 library(ggplot2)
 library(dplyr)
 
-# Adding the variable decade based on the variables years 
-movies <- mutate(movies, decade = ifelse(year %in% 1950:1959, "1950s",
-                                        ifelse(year %in% 1960:1969, "1960s",
-                                        ifelse(year %in% 1970:1979, "1970s",
-                                        ifelse(year %in% 1980:1989, "1980s",
-                                        ifelse(year %in% 1990:1999, "1990s",
-                                        ifelse(year %in% 2000:2009, "2000s", "<1949")))))))
-
 
 #Filtering the dataset so that it only contains relevant variables
 moviesx <-movies[c('title', 'year', 'length', 'budget','rating','votes') ]
-#Filtering the dataset so that it only contains films that contain a certain amount of votes. Specifically, above the 50th percentile which is 30
+#Filtering the dataset so that it only contains films that contain a certain amount 
+#of votes. Specifically, above the 50th percentile which is 30
 moviesfiltered <- filter(moviesx, votes > (quantile(movies$votes, .5)))
 #Filtering the dataset so that it only contains films released after the year 1950
 moviesfilteredx <- filter(moviesfiltered, year > 1950)
@@ -311,117 +293,109 @@ moviesfilteredx <- filter(moviesfiltered, year > 1950)
 
 
 ### Figure 1 
-```{r, echo=TRUE, results = "hide", warning= FALSE}
+```{r, echo=TRUE, results = "hide", eval = FALSE, warning= FALSE}
 #creating histogram of films based on year they were released
 hist(movies$year, main = "Histogram of Film Years", xlab= "Year of Film Release")
 ```
 
 ### Figure 2
-```{r, echo=TRUE, results = "hide", warning= FALSE}
-#Showing what the scatterplot between rating and length looks like without removing outlier
-plot(rating~length,data=moviesfilteredx , main = "Film Length vs. Rating", xlab = "Length of Film", ylab = "Rating of Film")
+```{r, echo=TRUE, results = "hide", eval = FALSE, warning= FALSE}
+#Showing what the scatterplot between rating and length looks like without removing 
+#outlier
+plot(rating~length,data=moviesfilteredx , main = "Film Length vs. Rating", xlab =
+       "Length of Film", ylab = "Rating of Film")
 ```
 
 ### Figure 3
-```{r, echo=TRUE, results = "hide", warning= FALSE}
+```{r, echo=TRUE, results = "hide", eval = FALSE, warning= FALSE}
 #filtering dataset so that it does not include outlier
 movieswithoutcureforinsomnia <- filter(moviesfilteredx, length < 3000)
 #Showing what the scatterplot betweem rating and length looks like without the outlier
-plot(rating~length,data=movieswithoutcureforinsomnia , main = "Film Length vs. Rating", xlab = "Length of Film", ylab = "Rating of Film")
+plot(rating~length,data=movieswithoutcureforinsomnia , main = "Film Length vs. Rating",
+     xlab = "Length of Film", ylab = "Rating of Film")
 ```
 
 ### Table 1
-```{r, echo=TRUE, results = "hide", warning= FALSE}
+```{r, echo=TRUE, results = "hide", eval = FALSE, warning= FALSE}
 #Code to show first few rows of data
 head(moviesfilteredx)
 ```
 
 ### Figure 4
-```{r, echo=TRUE, results = "hide", warning= FALSE}
+```{r, echo=TRUE, results = "hide", eval = FALSE, warning= FALSE}
 #Remove entries that have a value of NA or 0 for budget 
 budgetfiltered <- filter(moviesfilteredx, budget > 0)
 #Scatterplot of rating and budget 
-plot(rating~budget,data=budgetfiltered  , main = "Film Budget vs. Rating", xlab = "Budget of Film", ylab = "Rating of Film") 
+plot(rating~budget,data=budgetfiltered  , main = "Film Budget vs. Rating",
+     xlab = "Budget of Film", ylab = "Rating of Film") 
 ```
 
 ### Figure 5 
-```{r, echo=TRUE, results = "hide", warning= FALSE}
+```{r, echo=TRUE, results = "hide", eval = FALSE, warning= FALSE}
 #Creating a variable for the linear regression 
 linregbudget <- lm(rating~budget, data=budgetfiltered)
 
 #plotting graph with visualization of linear regression  
-plot(rating~budget,data=budgetfiltered , main = "Film Budget vs. Rating", xlab = "Budget of Film", ylab = "Rating of Film") 
+plot(rating~budget,data=budgetfiltered , main = "Film Budget vs. Rating",
+     xlab = "Budget of Film", ylab = "Rating of Film") 
 abline(linregbudget, col="red")
 ```
 
 ### Table 2
-```{r, echo=TRUE, results = "hide", warning= FALSE}
+```{r, echo=TRUE, results = "hide", eval = FALSE, warning= FALSE}
 #Summary statistics for linear regression 
 summary(linregbudget)
 ```
 
 ### Figure 6
-```{r, echo=TRUE, results = "hide", warning= FALSE}
+```{r, echo=TRUE, results = "hide", eval = FALSE, warning= FALSE}
 #Scatterplot of rating and length 
-plot(rating~length,data=movieswithoutcureforinsomnia, main = "Film Length vs. Rating", xlab = "Length of Film (in minutes)", ylab = "Rating of Film") 
+plot(rating~length,data=movieswithoutcureforinsomnia, 
+     main = "Film Length vs. Rating", xlab = "Length of Film (in minutes)",
+     ylab = "Rating of Film") 
 ```
 
 ### Figure 7 
-```{r, echo=TRUE, results = "hide", warning= FALSE}
+```{r, echo=TRUE, results = "hide", eval = FALSE, warning= FALSE}
 #Variable for linear regression between rating and length
 linreglength <- lm(rating~length, data=movieswithoutcureforinsomnia)
 
 #Visualizing scatterplot with linear regression overlayed
-plot(rating~length,data=movieswithoutcureforinsomnia, main = "Film Length vs. Rating", xlab = "Length of Film (in minutes)", ylab = "Rating of Film") 
+plot(rating~length,data=movieswithoutcureforinsomnia,
+     main = "Film Length vs. Rating", xlab = "Length of Film (in minutes)",
+     ylab = "Rating of Film") 
 abline(linreglength, col="red")
 ```
 
 ### Table 3
-```{r, echo=TRUE, results = "hide", warning= FALSE}
+```{r, echo=TRUE, results = "hide", eval = FALSE, warning= FALSE}
 #Summary statistics for linear regression
 summary(linreglength)
 ```
 
 ### Figure 8
-```{r, echo=TRUE, results = "hide", warning= FALSE}
+```{r, echo=TRUE, results = "hide", eval = FALSE, warning= FALSE}
 #Scatterplot of rating and year 
-plot(rating~year,data=moviesfilteredx, main = "Year of Release vs. Rating", xlab = "Year of Release", ylab = "Rating of Film") 
+plot(rating~year,data=moviesfilteredx, main = "Year of Release vs. Rating",
+     xlab = "Year of Release", ylab = "Rating of Film") 
 ```
 
 ### Figure 9
-```{r, echo=TRUE, results = "hide", warning= FALSE}
+```{r, echo=TRUE, results = "hide", eval = FALSE, warning= FALSE}
 #Variable for linear regression between length and year 
 linregyear <- lm(rating~year, data=moviesfilteredx)
 
 #Visualizing scatterplot with linear regression overlayed
-plot(rating~year,data=moviesfilteredx , main = "Year of Release vs. Rating", xlab = "Year of Release", ylab = "Rating of Film") 
+plot(rating~year,data=moviesfilteredx , main = "Year of Release vs. Rating",
+     xlab = "Year of Release", ylab = "Rating of Film") 
 abline(linregyear, col="red")
 ```
 
 ### Table 4
-```{r, echo=TRUE, results = "hide", warning= FALSE}
+```{r, echo=TRUE, results = "hide", eval = FALSE, warning= FALSE}
 #Summary statistics for linear regression
 summary(linregyear)
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ### References 
